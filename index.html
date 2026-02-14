@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>San Valentín </title>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --color-vino: #630d16;
+    --color-vino-claro: #8b1a25;
+    --color-dorado: #d4af37;
+    --color-papel: #fdfcf0;
+  }
+
+  body {
+    margin: 0; padding: 20px 10px;
+    font-family: 'Playfair Display', serif;
+    background: linear-gradient(135deg, #2b050a, var(--color-vino));
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    text-align: center;
+    overflow-x: hidden;
+  }
+
+  .main-title {
+    font-family: 'Dancing Script', cursive;
+    font-size: 3.5rem;
+    color: white;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+  }
+
+  /* --- SOBRE --- */
+  .envelope-wrapper {
+    position: relative;
+    cursor: pointer;
+    z-index: 100;
+    margin-bottom: 40px;
+  }
+
+  .envelope {
+    position: relative;
+    width: 300px;
+    height: 200px;
+    background: var(--color-vino-claro);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+    border-radius: 0 0 10px 10px;
+  }
+
+  .envelope::before {
+    content: "";
+    position: absolute;
+    top: 0; z-index: 4;
+    border-top: 110px solid var(--color-vino);
+    border-left: 150px solid transparent;
+    border-right: 150px solid transparent;
+    transform-origin: top;
+    transition: transform 0.5s ease-in-out;
+  }
+
+  .envelope::after {
+    content: "";
+    position: absolute;
+    z-index: 3;
+    width: 0; height: 0;
+    border-top: 100px solid transparent;
+    border-right: 150px solid var(--color-vino-claro);
+    border-bottom: 100px solid var(--color-vino-claro);
+    border-left: 150px solid rgba(255,255,255,0.05);
+    border-radius: 0 0 10px 10px;
+  }
+
+  .letter {
+    position: absolute;
+    bottom: 10px; left: 10px;
+    width: 280px; height: 180px;
+    background: var(--color-papel);
+    z-index: 2;
+    transition: transform 0.6s ease-in-out;
+    padding: 20px;
+    box-sizing: border-box;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .letter p {
+    font-family: 'Dancing Script', cursive;
+    font-size: 1.4rem;
+    color: var(--color-vino);
+    margin: 0;
+  }
+
+  .envelope-wrapper.open .envelope::before { transform: rotateX(180deg); z-index: 1; }
+  .envelope-wrapper.open .letter { transform: translateY(-130px); z-index: 5; height: auto; min-height: 200px; }
+
+  /* --- FOTOS VOLADORAS --- */
+  .floating-photo {
+    position: fixed;
+    width: 150px;
+    padding: 8px 8px 25px 8px;
+    background: white;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+    transform: rotate(var(--r));
+    z-index: 50;
+    pointer-events: none;
+    animation: appear 0.4s ease-out forwards;
+  }
+  .floating-photo img { width: 100%; height: auto; display: block; }
+  @keyframes appear { from { transform: scale(0) rotate(0deg); opacity: 0; } to { opacity: 1; } }
+
+  /* --- SECCIÓN PREGUNTA --- */
+  #questionSection {
+    display: none;
+    text-align: center;
+    z-index: 200;
+    max-width: 450px;
+  }
+  .img-valentine { width: 250px; border-radius: 15px; border: 3px solid white; margin-bottom: 15px; }
+  
+  .btn {
+    padding: 12px 25px; margin: 10px; border: none; border-radius: 30px;
+    font-size: 1.1rem; cursor: pointer; font-weight: bold; transition: 0.3s;
+  }
+  .btn-yes { background: white; color: var(--color-vino); }
+  .btn-no { background: rgba(255,255,255,0.2); color: white; border: 1px solid white; }
+
+  /* --- CORAZONES FLOTANTES --- */
+  .heart-float {
+    position: fixed;
+    bottom: -50px;
+    font-size: 24px;
+    color: #ff4d6d;
+    user-select: none;
+    pointer-events: none;
+    z-index: 999;
+    animation: floatUp linear infinite;
+  }
+  @keyframes floatUp {
+    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
+  }
+
+  /* --- CARTA FINAL --- */
+  .final-letter {
+    background: var(--color-papel);
+    color: var(--color-vino);
+    padding: 25px;
+    margin: 20px auto;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    max-width: 90%;
+    text-align: left;
+    border: 2px dashed var(--color-dorado);
+    position: relative;
+  }
+
+  #spotifyContainer {
+    width: 100%;
+    max-width: 320px;
+    margin-top: 20px;
+    z-index: 300;
+  }
+</style>
+</head>
+<body onclick="spawnPhoto(event)">
+
+  <h1 class="main-title">Happy Valentines Day</h1>
+
+  <div class="envelope-wrapper" id="envelopeWrapper" onclick="openLetter(event)">
+    <div class="envelope">
+      <div class="letter">
+        <p>Dear Cristian</p>
+        <p style="font-size: 1rem; margin-top: 10px;">Presiona para abrir 💌</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="questionSection">
+    <div id="contentToHide">
+        <img src="images/descarga (6).jpeg" class="img-valentine">
+        <h2 style="font-family: 'Dancing Script'; font-size: 2.8rem; margin: 10px 0;">Will you be my Valentine?</h2>
+        
+        <div id="btnGroup">
+          <button class="btn btn-yes" id="yesBtn" onclick="accept(event)">Yes 💘</button>
+          <button class="btn btn-no" id="noBtn">No 😢</button>
+        </div>
+    </div>
+    
+    <div id="finalContent" style="display:none; margin-top: 25px; animation: appear 0.8s;">
+      <img src="images/_).jpeg" style="width: 260px; border-radius: 15px; box-shadow: 0 0 25px rgba(255,255,255,0.3);">
+      
+      <p style="font-size: 1.2rem; font-weight: bold; margin-top: 20px;" id="finalMsg"></p>
+
+      <div class="final-letter">
+        <p style="font-family: 'Dancing Script', cursive; font-size: 1.8rem; margin-bottom: 10px; border-bottom: 1px solid rgba(99, 13, 22, 0.2);">Dear Cristian,</p>
+        
+        <p style="font-size: 1.05rem; line-height: 1.5; margin-bottom: 10px;">
+            "Cris, sé que no estamos pasando por nuestro mejor momento y que  las discusiones nos han desgastado y cansado un poco. No te voy a mentir diciendo que todo es perfecto, porque a veces nos cuesta entendernos y parece que los días grises pesan más. Pero hoy es San Valentín y quiero dejar todo eso afuera por un momento.
+            Te escribo esto porque, a pesar de todo ese ruido, mi amor por ti no ha cambiado; sigo viendo en ti a mi compañero y a mi persona favorita. Aunque hoy las cosas se sientan difíciles, sigo eligiendo estar aquí . Que este detalle sea un pequeño descanso para recordarnos lo que sí tenemos y agradecerte por no soltarme incluso cuando el camino se pone difícil. Te amo."
+        </p>
+        
+        <p style="font-family: 'Dancing Script', cursive; font-size: 1.6rem; text-align: right; margin-top: 15px;">
+            Con mucho cariño, <br>
+            [lian]
+        </p>
+        
+        <div style="position: absolute; top: -10px; right: -10px; background: var(--color-vino); color: white; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; border: 2px solid var(--color-dorado);">❤️</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="spotifyContainer">
+    <iframe src="https://open.spotify.com/embed/track/5Ts1DYOuouQLgzTaisxWYh" width="100%" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+  </div>
+
+<script>
+  let step = 0; 
+  let photoCount = 0;
+  const maxPhotos = 13;
+  const images = [
+    'images/WhatsApp Image 2026-02-13 at 17.56.57 (1).jpeg', 
+    'images/WhatsApp Image 2026-02-13 at 17.56.57.jpeg', 
+    'images/WhatsApp Image 2026-02-13 at 17.56.58 (1).jpeg', 
+    'images/WhatsApp Image 2026-02-13 at 17.56.58 (2).jpeg', 
+    'images/WhatsApp Image 2026-02-13 at 17.56.58 (3).jpeg',
+    'images/WhatsApp Image 2026-02-13 at 17.56.58 (4).jpeg',
+    'images/WhatsApp Image 2026-02-13 at 17.56.58 (5).jpeg',
+    'images/WhatsApp Image 2026-02-13 at 17.56.58 (6).jpeg',
+    'images/WhatsApp Image 2026-02-13 at 17.56.58.jpeg',
+    'images/WhatsApp Image 2026-02-13 at 17.56.59.jpeg',
+    'images/WhatsApp Image 2026-02-13 at 18.00.39 (1).jpeg',
+    'images/WhatsApp Image 2026-02-13 at 18.00.39 (2).jpeg',
+    'images/WhatsApp Image 2026-02-13 at 18.00.39.jpeg'
+  ];
+
+  function openLetter(e) {
+    e.stopPropagation();
+    document.getElementById('envelopeWrapper').classList.add('open');
+    setTimeout(() => {
+      document.querySelector('.letter p:last-child').innerHTML = "<b>Toca la pantalla para ver nuestros recuerdos...</b>";
+      step = 1;
+    }, 600);
+  }
+
+  function spawnPhoto(e) {
+    if (step !== 1) return;
+    if (photoCount < maxPhotos) {
+      const photo = document.createElement('div');
+      photo.className = 'floating-photo';
+      photo.style.left = (e.clientX - 75) + 'px';
+      photo.style.top = (e.clientY - 75) + 'px';
+      photo.style.setProperty('--r', (Math.random() * 40 - 20) + 'deg');
+      const imgPath = images[photoCount % images.length];
+      photo.innerHTML = `<img src="${imgPath}">`;
+      document.body.appendChild(photo);
+      photoCount++;
+    } else {
+      showQuestion();
+    }
+  }
+
+  function showQuestion() {
+    step = 2;
+    document.querySelectorAll('.floating-photo').forEach(p => p.remove());
+    document.getElementById('envelopeWrapper').style.display = 'none';
+    document.getElementById('questionSection').style.display = 'block';
+  }
+
+  function createHeart() {
+    const heart = document.createElement('div');
+    heart.className = 'heart-float';
+    heart.style.left = Math.random() * 100 + 'vw';
+    heart.style.fontSize = 15 + Math.random() * 25 + 'px';
+    heart.style.animationDuration = 3 + Math.random() * 3 + 's';
+    heart.innerHTML = '❤️';
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 5000);
+  }
+
+  let scale = 1;
+  function accept(e) {
+    e.stopPropagation();
+    scale += 0.4;
+    document.getElementById('yesBtn').style.transform = `scale(${scale})`;
+    
+    if (scale === 1.4) setInterval(createHeart, 300);
+
+    if (scale >= 4) {
+      document.getElementById('contentToHide').style.display = 'none';
+      document.getElementById('finalContent').style.display = 'block';
+      document.getElementById('finalMsg').innerText = "Este año el detalle no será nada físico, pero cuando acabes de leer esto avísame. Te amo ❤️";
+    }
+  }
+
+  const noBtn = document.getElementById('noBtn');
+  noBtn.addEventListener('mouseover', () => {
+    noBtn.style.position = 'fixed';
+    noBtn.style.left = Math.random() * 70 + 'vw';
+    noBtn.style.top = Math.random() * 70 + 'vh';
+  });
+</script>
+</body>
+</html>
