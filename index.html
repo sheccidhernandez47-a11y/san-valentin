@@ -34,7 +34,6 @@
     text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
   }
 
-  /* --- SOBRE (Z-index bajo) --- */
   .envelope-wrapper {
     position: relative;
     cursor: pointer;
@@ -97,11 +96,9 @@
     margin: 0;
   }
 
-  /* Al abrir la carta, el z-index se mantiene bajo (5) para que no tape las fotos */
   .envelope-wrapper.open .envelope::before { transform: rotateX(180deg); z-index: 1; }
   .envelope-wrapper.open .letter { transform: translateY(-130px); z-index: 5; height: auto; min-height: 200px; }
 
-  /* --- FOTOS FLOTANTES (Z-index máximo para ir al frente) --- */
   .floating-photo {
     position: fixed;
     width: 130px; 
@@ -109,7 +106,7 @@
     background: white;
     box-shadow: 0 10px 25px rgba(0,0,0,0.5);
     transform: rotate(var(--r));
-    z-index: 9999; /* Esto garantiza que salgan ADELANTE de la carta */
+    z-index: 9999; 
     pointer-events: none;
     animation: appear 0.4s ease-out forwards;
   }
@@ -150,7 +147,6 @@
     100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
   }
 
-  /* --- CARTA FINAL --- */
   .final-letter {
     background: var(--color-papel);
     color: var(--color-vino);
@@ -177,7 +173,7 @@
 
   <h1 class="main-title">Happy Valentines Day</h1>
 
-  <div class="envelope-wrapper" id="envelopeWrapper" onclick="openLetter(event)">
+  <div class="envelope-wrapper" id="envelopeWrapper" onclick="openLetter(event); spawnPhoto(event)">
     <div class="envelope">
       <div class="letter">
         <p>Dear Cristian</p>
@@ -192,7 +188,7 @@
         <h2 style="font-family: 'Dancing Script'; font-size: 2.8rem; margin: 10px 0;">Will you be my Valentine?</h2>
         
         <div id="btnGroup">
-          <button class="btn btn-yes" id="yesBtn" onclick="accept(event)">Yes</button>
+          <button class="btn btn-yes" id="yesBtn" onclick="accept(event)">Yes </button>
           <button class="btn btn-no" id="noBtn">No </button>
         </div>
     </div>
@@ -221,7 +217,7 @@
   </div>
 
   <div id="spotifyContainer">
-    <iframe src="https://open.spotify.com/embed/track/2SST9p8f7p91I982o713D8?utm_source=generator" width="100%" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+    <iframe src="https://open.spotify.com/embed/track/6p8Eic9goInFC9pST99Q9u?utm_source=generator" width="100%" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
   </div>
 
 <script>
@@ -245,16 +241,20 @@
   ];
 
   function openLetter(e) {
-    e.stopPropagation();
-    document.getElementById('envelopeWrapper').classList.add('open');
-    setTimeout(() => {
-      document.querySelector('.letter p:last-child').innerHTML = "<b>Toca la pantalla para ver nuestros recuerdos...</b>";
-      step = 1;
-    }, 600);
+    // Permitimos que el clic en el sobre también active la primera foto
+    if (step === 0) {
+      document.getElementById('envelopeWrapper').classList.add('open');
+      setTimeout(() => {
+        document.querySelector('.letter p:last-child').innerHTML = "<b>Toca la pantalla para ver nuestros recuerdos...</b>";
+        step = 1;
+      }, 600);
+    }
   }
 
   function spawnPhoto(e) {
-    if (step !== 1) return;
+    // Si no ha abierto el sobre, forzamos que se abra primero
+    if (step === 0) return; 
+    
     if (photoCount < maxPhotos) {
       const photo = document.createElement('div');
       photo.className = 'floating-photo';
@@ -262,7 +262,6 @@
       let leftPos = e.clientX - 65;
       let topPos = e.clientY - 65;
       
-      // Control de bordes para móvil
       if (leftPos < 10) leftPos = 10;
       if (leftPos > window.innerWidth - 140) leftPos = window.innerWidth - 140;
 
