@@ -34,6 +34,7 @@
     text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
   }
 
+  /* --- SOBRE --- */
   .envelope-wrapper {
     position: relative;
     cursor: pointer;
@@ -99,23 +100,21 @@
   .envelope-wrapper.open .envelope::before { transform: rotateX(180deg); z-index: 1; }
   .envelope-wrapper.open .letter { transform: translateY(-130px); z-index: 5; height: auto; min-height: 200px; }
 
+  /* --- FOTOS (Más pequeñas y con z-index alto) --- */
   .floating-photo {
     position: fixed;
-    width: 130px; 
-    padding: 5px 5px 22px 5px;
+    width: 110px; /* Tamaño reducido para mejor vista */
+    padding: 5px 5px 20px 5px;
     background: white;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.4);
     transform: rotate(var(--r));
-    z-index: 9999; 
+    z-index: 9999;
     pointer-events: none;
     animation: appear 0.4s ease-out forwards;
   }
   .floating-photo img { width: 100%; height: auto; display: block; }
   
-  @keyframes appear { 
-    from { transform: scale(0) rotate(0deg); opacity: 0; } 
-    to { opacity: 1; transform: scale(1) rotate(var(--r)); } 
-  }
+  @keyframes appear { from { transform: scale(0) rotate(0deg); opacity: 0; } to { opacity: 1; } }
 
   #questionSection {
     display: none;
@@ -158,7 +157,6 @@
     text-align: left;
     border: 2px dashed var(--color-dorado);
     position: relative;
-    z-index: 10;
   }
 
   #spotifyContainer {
@@ -195,29 +193,25 @@
     
     <div id="finalContent" style="display:none; margin-top: 25px; animation: appear 0.8s;">
       <img src="images/hola.jpg" style="width: 260px; border-radius: 15px; box-shadow: 0 0 25px rgba(255,255,255,0.3);">
-      
       <p style="font-size: 1.2rem; font-weight: bold; margin-top: 20px;" id="finalMsg"></p>
 
       <div class="final-letter">
         <p style="font-family: 'Dancing Script', cursive; font-size: 1.8rem; margin-bottom: 10px; border-bottom: 1px solid rgba(99, 13, 22, 0.2);">Dear Cristian,</p>
-        
         <p style="font-size: 1.05rem; line-height: 1.5; margin-bottom: 10px;">
-            Cris, sé que no estamos pasando por nuestro mejor momento y que las discusiones nos han desgastado y cansado un poco. No te voy a mentir diciendo que todo es perfecto, porque a veces nos cuesta entendernos y parece que los días grises pesan más. Pero hoy es San Valentín y quiero dejar todo eso afuera por un momento. <br><br>
-            Te escribo esto porque, a pesar de todo ese ruido, mi amor por ti no ha cambiado; sigo viendo en ti a mi compañero y a mi persona favorita. Aunque hoy las cosas se sientan difíciles, sigo eligiendo estar aquí. Que este detalle sea un pequeño descanso para recordarnos lo que sí tenemos y agradecerte por no soltarme incluso cuando el camino se pone difícil. Te amo.
+            "Cris, sé que no estamos pasando por nuestro mejor momento y que las discusiones nos han desgastado y cansado un poco. No te voy a mentir diciendo que todo es perfecto, porque a veces nos cuesta entendernos y parece que los días grises pesan más. Pero hoy es San Valentín y quiero dejar todo eso afuera por un momento.
+            Te escribo esto porque, a pesar de todo ese ruido, mi amor por ti no ha cambiado; sigo viendo en ti a mi compañero y a mi persona favorita. Aunque hoy las cosas se sientan difíciles, sigo eligiendo estar aquí. Que este detalle sea un pequeño descanso para recordarnos lo que sí tenemos y agradecerte por no soltarme incluso cuando el camino se pone difícil. Te amo."
         </p>
-        
         <p style="font-family: 'Dancing Script', cursive; font-size: 1.6rem; text-align: right; margin-top: 15px;">
             Con mucho cariño, <br>
             Lian
         </p>
-        
         <div style="position: absolute; top: -10px; right: -10px; background: var(--color-vino); color: white; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; border: 2px solid var(--color-dorado);">❤️</div>
       </div>
     </div>
   </div>
 
   <div id="spotifyContainer">
-    <iframe src="https://open.spotify.com/embed/track/6p8Eic9goInFC9pST99Q9u?utm_source=generator" width="100%" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+    <iframe src="http://googleusercontent.com/spotify.com/4" width="100%" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
   </div>
 
 <script>
@@ -241,7 +235,6 @@
   ];
 
   function openLetter(e) {
-    // Permitimos que el clic en el sobre también active la primera foto
     if (step === 0) {
       document.getElementById('envelopeWrapper').classList.add('open');
       setTimeout(() => {
@@ -252,18 +245,19 @@
   }
 
   function spawnPhoto(e) {
-    // Si no ha abierto el sobre, forzamos que se abra primero
-    if (step === 0) return; 
-    
+    // Si ya llegamos a la pregunta o no se ha abierto el sobre, no hacer nada aquí
+    if (step === 2) return; 
+
     if (photoCount < maxPhotos) {
       const photo = document.createElement('div');
       photo.className = 'floating-photo';
       
-      let leftPos = e.clientX - 65;
-      let topPos = e.clientY - 65;
+      // Ajustar posición para que no se corten
+      let leftPos = e.clientX - 55;
+      let topPos = e.clientY - 55;
       
       if (leftPos < 10) leftPos = 10;
-      if (leftPos > window.innerWidth - 140) leftPos = window.innerWidth - 140;
+      if (leftPos > window.innerWidth - 120) leftPos = window.innerWidth - 120;
 
       photo.style.left = leftPos + 'px';
       photo.style.top = topPos + 'px';
