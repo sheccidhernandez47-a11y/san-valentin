@@ -100,15 +100,15 @@
   .envelope-wrapper.open .envelope::before { transform: rotateX(180deg); z-index: 1; }
   .envelope-wrapper.open .letter { transform: translateY(-130px); z-index: 5; height: auto; min-height: 200px; }
 
-  /* --- FOTOS (Más pequeñas y con z-index alto) --- */
+  /* --- FOTOS MEJORADAS --- */
   .floating-photo {
     position: fixed;
-    width: 110px; /* Tamaño reducido para mejor vista */
+    width: 110px; /* Tamaño ideal para móvil */
     padding: 5px 5px 20px 5px;
     background: white;
     box-shadow: 0 10px 20px rgba(0,0,0,0.4);
     transform: rotate(var(--r));
-    z-index: 9999;
+    z-index: 9999; /* Siempre arriba de la carta */
     pointer-events: none;
     animation: appear 0.4s ease-out forwards;
   }
@@ -211,7 +211,7 @@
   </div>
 
   <div id="spotifyContainer">
-    <iframe src="https://open.spotify.com/embed/track/5Ts1DYOuouQLgzTaisxWYh" width="100%" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+    <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/2SST9T63Bv56sH4SAbL9mU?utm_source=generator" width="100%" height="80" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
   </div>
 
 <script>
@@ -245,17 +245,17 @@
   }
 
   function spawnPhoto(e) {
-    // Si ya llegamos a la pregunta o no se ha abierto el sobre, no hacer nada aquí
+    // Si ya estamos en la pregunta final, no spawneamos más fotos sobre el contenido
     if (step === 2) return; 
 
     if (photoCount < maxPhotos) {
       const photo = document.createElement('div');
       photo.className = 'floating-photo';
       
-      // Ajustar posición para que no se corten
       let leftPos = e.clientX - 55;
       let topPos = e.clientY - 55;
       
+      // Asegurar que no se salgan del borde del cel
       if (leftPos < 10) leftPos = 10;
       if (leftPos > window.innerWidth - 120) leftPos = window.innerWidth - 120;
 
@@ -314,4 +314,3 @@
 </script>
 </body>
 </html>
-
