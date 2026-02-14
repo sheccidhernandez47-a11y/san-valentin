@@ -34,7 +34,7 @@
     text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
   }
 
-  /* --- SOBRE (Z-index bajo para que fotos floten arriba) --- */
+  /* --- SOBRE (Z-index bajo) --- */
   .envelope-wrapper {
     position: relative;
     cursor: pointer;
@@ -97,22 +97,23 @@
     margin: 0;
   }
 
+  /* Al abrir la carta, el z-index se mantiene bajo (5) para que no tape las fotos */
   .envelope-wrapper.open .envelope::before { transform: rotateX(180deg); z-index: 1; }
   .envelope-wrapper.open .letter { transform: translateY(-130px); z-index: 5; height: auto; min-height: 200px; }
 
-  /* --- FOTOS FLOTANTES MEJORADAS --- */
+  /* --- FOTOS FLOTANTES (Z-index máximo para ir al frente) --- */
   .floating-photo {
     position: fixed;
-    width: 120px; /* Tamaño ideal para móvil */
-    padding: 5px 5px 20px 5px;
+    width: 130px; 
+    padding: 5px 5px 22px 5px;
     background: white;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
     transform: rotate(var(--r));
-    z-index: 999; /* Por encima de todo */
+    z-index: 9999; /* Esto garantiza que salgan ADELANTE de la carta */
     pointer-events: none;
     animation: appear 0.4s ease-out forwards;
   }
-  .floating-photo img { width: 100%; height: auto; display: block; border: 1px solid #eee; }
+  .floating-photo img { width: 100%; height: auto; display: block; }
   
   @keyframes appear { 
     from { transform: scale(0) rotate(0deg); opacity: 0; } 
@@ -161,6 +162,7 @@
     text-align: left;
     border: 2px dashed var(--color-dorado);
     position: relative;
+    z-index: 10;
   }
 
   #spotifyContainer {
@@ -190,7 +192,7 @@
         <h2 style="font-family: 'Dancing Script'; font-size: 2.8rem; margin: 10px 0;">Will you be my Valentine?</h2>
         
         <div id="btnGroup">
-          <button class="btn btn-yes" id="yesBtn" onclick="accept(event)">Yes </button>
+          <button class="btn btn-yes" id="yesBtn" onclick="accept(event)">Yes</button>
           <button class="btn btn-no" id="noBtn">No </button>
         </div>
     </div>
@@ -219,7 +221,7 @@
   </div>
 
   <div id="spotifyContainer">
-    <iframe src="https://open.spotify.com/embed/track/1PckvKvgy9Yp8v0U8Y9X5L" width="100%" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+    <iframe src="https://open.spotify.com/embed/track/2SST9p8f7p91I982o713D8?utm_source=generator" width="100%" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
   </div>
 
 <script>
@@ -257,12 +259,12 @@
       const photo = document.createElement('div');
       photo.className = 'floating-photo';
       
-      // Ajuste para que no se salgan de la pantalla del celular
-      let leftPos = e.clientX - 60;
-      let topPos = e.clientY - 60;
+      let leftPos = e.clientX - 65;
+      let topPos = e.clientY - 65;
       
+      // Control de bordes para móvil
       if (leftPos < 10) leftPos = 10;
-      if (leftPos > window.innerWidth - 130) leftPos = window.innerWidth - 130;
+      if (leftPos > window.innerWidth - 140) leftPos = window.innerWidth - 140;
 
       photo.style.left = leftPos + 'px';
       photo.style.top = topPos + 'px';
